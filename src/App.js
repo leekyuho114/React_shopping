@@ -3,26 +3,28 @@ import './App.css';
 import { useState } from 'react';
 import { Button, Container,Nav, Navbar } from 'react-bootstrap';
 import data from './data.js'; //나중엔 database에서 가져오기
-import {Routes, Route, Link} from 'react-router-dom'
-
+import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom'
+import Detail from './Pages/Detail.js'
 function App() {
   let [pics, setPics] = useState(data);
+  let navigate = useNavigate();
+
   return (
     <div className="App">
 
       <Navbar className = "color-nav" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="#home" className = "shop-logo">Blog</Navbar.Brand>
+          <Navbar.Brand onClick={()=>{navigate('/')}} className = "shop-logo" style={{ cursor: 'pointer' }}>Blog</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">About us</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/')}}>Home</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/detail')}}>Detail</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/about')}}>About us</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/event')}}>Event</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
       {/* <div className = "main-bg" style={{backgroundImage : 'url('+bg+')'}}></div> */}
-      <Link to="/"> 홈 </Link>
-      <Link to="/detail"> 상세 </Link>
+      
       <Routes>
         <Route path="/" element={
           <>
@@ -42,8 +44,13 @@ function App() {
           </div>
           </>
         }/>
-        <Route path="/detail" element={<div>상세페이지임</div>}/>
-        <Route path="/about" element={<div>about페이지임</div>}/>
+        <Route path="/detail" element={<div><Detail/></div>}/>
+        <Route path="/about" element={<div><AboutUs/></div>}/>
+        <Route path="/event" element={<div><Event/></div>}>
+          <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>}/>
+          <Route path="two" element={<div>생일기념 쿠폰받기</div>}/>
+        </Route>
+        <Route path="*" element={<div>404</div>}/>
       </Routes>
       
     </div>
@@ -60,21 +67,20 @@ function Pictures(props){
   );
 }
 
-function Detail(){
+function AboutUs(){
   return(
-    <div className="container">
-      <div className="row">
-        <div className="col-md-6">
-          <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="100%" />
-        </div>
-      <div className="col-md-6">
-      <h4 className="pt-5">상품명</h4>
-      <p>상품설명</p>
-      <p>120000원</p>
-      <button className="btn btn-danger">주문하기</button> 
-    </div>
-  </div>
-</div> 
+    <>
+      아직 안만들었습니다...
+    </>
+  );
+}
+
+function Event(){
+  return(
+    <>
+      <h4>오늘의 이벤트</h4>
+      <Outlet></Outlet>
+    </>
   );
 }
 export default App;
