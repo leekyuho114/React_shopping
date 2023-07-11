@@ -44,7 +44,7 @@ function App() {
           </div>
           </>
         }/>
-        <Route path="/detail" element={<div><Detail/></div>}/>
+        <Route path="/detail/:id" element={<div><Detail pics = {pics}/></div>}/>
         <Route path="/about" element={<div><AboutUs/></div>}/>
         <Route path="/event" element={<div><Event/></div>}>
           <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>}/>
