@@ -47,6 +47,12 @@
   background-size: contain;
   background-position: center;
 }
+.main-pics{
+  width : 80%; 
+  height : 60%; 
+  margin-top : 15px;
+  object-fit: cover;
+}
 .color-nav {
   background-color: rgb(42, 26, 7);
 }
