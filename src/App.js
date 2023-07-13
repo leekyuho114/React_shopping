@@ -5,6 +5,7 @@ import { Button, Container,Nav, Navbar , Form, InputGroup} from 'react-bootstrap
 import data from './data.js'; //나중엔 database에서 가져오기
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom'
 import Detail from './Pages/Detail.js'
+import axios from 'axios';
 function App() {
   let [pics, setPics] = useState(data);
   const [inputValue, setInputValue] = useState('');
@@ -52,6 +53,16 @@ function App() {
                 }
               </div>
             </div>
+            <button onClick={()=>{
+              axios.get('https://codingapple1.github.io/shop/data2.json')
+              .then((res)=>{
+                const newItems = res.data;
+                setPics([...pics,...newItems]);
+              })
+              .catch(()=>{
+                console.log('fail to get data');
+              })
+            }}>버튼</button>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
                 <InputGroup.Text id="inputGroup-sizing-default">
@@ -76,20 +87,31 @@ function App() {
         </Route>
         <Route path="*" element={<div>404</div>}/>
       </Routes>
-      
     </div>
   );
 }
 
 function Pictures(props){
-  return(
-    <div className="col-md-4">
-      <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
-      <h4>{props.pics[props.num].title}</h4>
-      <p>{props.pics[props.num].content}</p>
-      <p>{props.pics[props.num].price}원</p>
-    </div>
-  );
+  if(props.num>=0 && props.num<=2){
+    return(
+      <div className="col-md-4">
+        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
+        <h4>{props.pics[props.num].title}</h4>
+        <p>{props.pics[props.num].content}</p>
+        <p>{props.pics[props.num].price}원</p>
+      </div>
+    );
+  }
+  else{
+    return(
+      <div className="col-md-4">
+        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
+        <h4>{props.pics[props.num].title}</h4>
+        <p>{props.pics[props.num].content}</p>
+        <p>{props.pics[props.num].price}원</p>
+      </div>
+    );
+  }
 }
 
 function AboutUs(){
