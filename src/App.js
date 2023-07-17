@@ -92,12 +92,11 @@ function App() {
 }
 
 function Pictures(props){
-  if(props.num>=0 && props.num<=2){
+  if(props.num>=0 && props.num<=7){
     return(
       <div className="col-md-4">
-        {/* <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/> */}
-        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={'http://codingapple1.github.io/shop/shoes'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
-        {/* <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={"http://codingapple1.github.io/shop/shoes6.jpg"} className = 'main-pics'/> */}
+        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
+        {/* <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={'http://codingapple1.github.io/shop/shoes'+ (props.num+1) +'.jpg'} className = 'main-pics'/> */}
         <h4>{props.pics[props.num].title}</h4>
         <p>{props.pics[props.num].content}</p>
         <p>{props.pics[props.num].price}원</p>
