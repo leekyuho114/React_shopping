@@ -9,6 +9,8 @@ import axios from 'axios';
 function App() {
   let [pics, setPics] = useState(data);
   const [inputValue, setInputValue] = useState('');
+  let [moreview, setMoreview] = useState(2); // 더보기를 위한 state 
+  let [loading, setLoading] = useState(false); //로딩중입니다 띄우기위한 state
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -25,7 +27,7 @@ function App() {
 
       <Navbar className = "color-nav" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand onClick={()=>{navigate('/')}} className = "shop-logo" style={{ cursor: 'pointer' }}>옷</Navbar.Brand>
+          <Navbar.Brand onClick={()=>{navigate('/')}} className = "shop-logo" style={{ cursor: 'pointer' }}>신발팜</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link onClick={()=>{navigate('/')}}>Home</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/detail')}}>Detail</Nav.Link>
@@ -53,16 +55,30 @@ function App() {
                 }
               </div>
             </div>
+            {
+              loading == true ? <div style={{marginTop : '50px', fontWeight:'bolder'}}>로딩중입니다</div> : null
+            }
             <button onClick={()=>{
-              axios.get('https://codingapple1.github.io/shop/data2.json')
-              .then((res)=>{
-                const newItems = res.data;
-                setPics([...pics,...newItems]);
-              })
-              .catch(()=>{
-                console.log('fail to get data');
-              })
-            }}>버튼</button>
+              if(moreview<=3){
+                setLoading(true);
+                axios.get('https://codingapple1.github.io/shop/data'+(moreview) + '.json')
+                .then((res)=>{
+                  console.log(res);
+                  const newItems = res.data;
+                  setPics([...pics,...newItems]);//array에 추가
+                })
+                .catch(()=>{
+                  console.log('fail to get data');
+                })
+                setLoading(false);
+                setMoreview(moreview+1);
+              }
+              else{
+                alert('no more data');
+              }
+            }}
+              style={{marginTop:'30px'}}
+            >more</button>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
                 <InputGroup.Text id="inputGroup-sizing-default">
@@ -92,11 +108,11 @@ function App() {
 }
 
 function Pictures(props){
-  if(props.num>=0 && props.num<=7){
+  if(props.num>=0 && props.num<=6){
     return(
       <div className="col-md-4">
-        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
-        {/* <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={'http://codingapple1.github.io/shop/shoes'+ (props.num+1) +'.jpg'} className = 'main-pics'/> */}
+        {/* <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/> */}
+        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={'http://codingapple1.github.io/shop/shoes'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
         <h4>{props.pics[props.num].title}</h4>
         <p>{props.pics[props.num].content}</p>
         <p>{props.pics[props.num].price}원</p>
@@ -104,14 +120,14 @@ function Pictures(props){
     );
   }
   else{
-    return(
-      <div className="col-md-4">
-        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
-        <h4>{props.pics[props.num].title}</h4>
-        <p>{props.pics[props.num].content}</p>
-        <p>{props.pics[props.num].price}원</p>
-      </div>
-    );
+    // return(
+    //   <div className="col-md-4">
+    //     <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
+    //     <h4>{props.pics[props.num].title}</h4>
+    //     <p>{props.pics[props.num].content}</p>
+    //     <p>{props.pics[props.num].price}원</p>
+    //   </div>
+    // );
   }
 }
 
