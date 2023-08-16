@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {useParams} from "react-router-dom";
 import { Form, InputGroup} from 'react-bootstrap';
 import './Detail.css';
+import {Context1} from './../App.js'
 function Detail(props){
+  useContext(Context1);
   useEffect(()=>{
     let a = setTimeout(()=>{setSale(false)},2000)
     return ()=>{
@@ -70,7 +72,7 @@ function Detail(props){
             <button onClick={()=>{setTabNumber(3)}}>반품/교환</button>
           </div>
         </div>
-        <Tab tabNumber = {tabNumber}/>
+        <Tab tabNumber = {tabNumber} pics = {props.pics}/>
       </div> 
     );
   }
@@ -83,7 +85,7 @@ function Tab(props){
   if(props.tabNumber == 0 ){
     return(
       <>
-        {props.tabNumber}
+        {props.pics[0].title}
       </>
     );
   }

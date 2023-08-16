@@ -1,16 +1,21 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
+import { createContext } from 'react';
 import { Button, Container,Nav, Navbar , Form, InputGroup} from 'react-bootstrap';
 import data from './data.js'; //나중엔 database에서 가져오기
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom'
 import Detail from './Pages/Detail.js'
 import axios from 'axios';
+export let Context1 = createContext();
 function App() {
   let [pics, setPics] = useState(data);
   const [inputValue, setInputValue] = useState('');
   let [moreview, setMoreview] = useState(2); // 더보기를 위한 state 
   let [loading, setLoading] = useState(false); //로딩중입니다 띄우기위한 state
+  let [shoeLeft, setShoeLeft] = useState(10,11,12);// 재고 정보
+
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -95,7 +100,12 @@ function App() {
             </div>
           </>
         }/>
-        <Route path="/detail/:id" element={<div><Detail pics = {pics} num={1}/></div>}/>
+        <Route path="/detail/:id" element={
+        <div>
+          <Context1.Provider value={{shoeLeft, pics}}>
+            <Detail pics = {pics} num={1}/>
+          </Context1.Provider>
+        </div>}/>
         <Route path="/about" element={<div><AboutUs/></div>}/>
         <Route path="/event" element={<div><Event/></div>}>
           <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>}/>
