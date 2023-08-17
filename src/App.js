@@ -6,6 +6,8 @@ import { Button, Container,Nav, Navbar , Form, InputGroup} from 'react-bootstrap
 import data from './data.js'; //나중엔 database에서 가져오기
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom'
 import Detail from './Pages/Detail.js'
+import Cart from './Pages/Cart.js'
+
 import axios from 'axios';
 export let Context1 = createContext();
 function App() {
@@ -106,6 +108,9 @@ function App() {
             <Detail pics = {pics} num={1}/>
           </Context1.Provider>
         </div>}/>
+
+        <Route path="/cart" element={<div><Cart/></div>}/>
+
         <Route path="/about" element={<div><AboutUs/></div>}/>
         <Route path="/event" element={<div><Event/></div>}>
           <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>}/>
@@ -150,11 +155,11 @@ function AboutUs(){
   );
 }
 
-function Event(){
+function Event(){ //outlet은 자식 Route들이 렌더링될 위치 지정
   return(
     <>
       <h4>오늘의 이벤트</h4>
-      <Outlet></Outlet>
+      <Outlet></Outlet>  
     </>
   );
 }
