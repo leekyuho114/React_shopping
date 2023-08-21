@@ -1,42 +1,6 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .shop-logo{
   margin-left: -40px;
 }
@@ -50,9 +14,22 @@
 .main-pics{
   width : 80%; 
   height : 60%; 
-  margin-top : 15px;
+  margin-top : 20px;
   object-fit: cover;
 }
 .color-nav {
   background-color: rgb(42, 26, 7);
+}
+.more-button{
+  border : none;
+  border-bottom: 2px solid rgb(97, 56, 5);
+  border-top: 2px solid rgb(97, 56, 5);
+  background-color: rgb(255, 255, 255);
+}
+.start{
+  opacity: 0; /*투명도 주는 스타일임*/
+}
+.end{
+  opacity : 1;
+  transition : opacity 0.5s;/*opacity 변경될때 0.5초 걸리게끔*/
 }

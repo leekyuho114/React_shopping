@@ -40,6 +40,7 @@ function App() {
             <Nav.Link onClick={()=>{navigate('/detail')}}>Detail</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/about')}}>About us</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/event')}}>Event</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/cart')}}>Cart</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -81,12 +82,13 @@ function App() {
                 setMoreview(moreview+1);
               }
               else{
-                alert('no more data');
+                alert('더 이상 상품이 존재하지 않습니다.');
               }
             }}
               style={{marginTop:'30px'}}
+              className='more-button'
             >more</button>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ marginTop:'30px', display: 'flex', justifyContent: 'center' }}>
               <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
                 <InputGroup.Text id="inputGroup-sizing-default">
                   Search
@@ -105,7 +107,7 @@ function App() {
         <Route path="/detail/:id" element={
         <div>
           <Context1.Provider value={{shoeLeft, pics}}>
-            <Detail pics = {pics} num={1}/>
+            <Detail pics = {pics} num={1} />
           </Context1.Provider>
         </div>}/>
 
@@ -113,7 +115,7 @@ function App() {
 
         <Route path="/about" element={<div><AboutUs/></div>}/>
         <Route path="/event" element={<div><Event/></div>}>
-          <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>}/>
+          <Route path="one" element={<div>첫 주문시 할인쿠폰 서비스</div>}/>
           <Route path="two" element={<div>생일기념 쿠폰받기</div>}/>
         </Route>
         <Route path="*" element={<div>404</div>}/>
@@ -149,8 +151,7 @@ function Pictures(props){
 function AboutUs(){
   return(
     <>
-      아직 안만들었습니다...
-      그냥 옷팔아유
+      Not designed
     </>
   );
 }

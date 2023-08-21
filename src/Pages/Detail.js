@@ -3,8 +3,11 @@ import {useParams} from "react-router-dom";
 import { Form, InputGroup} from 'react-bootstrap';
 import './Detail.css';
 import {Context1} from './../App.js'
+import './../App.css'
 function Detail(props){
+
   useContext(Context1);
+
   useEffect(()=>{
     let a = setTimeout(()=>{setSale(false)},2000)
     return ()=>{
@@ -15,6 +18,16 @@ function Detail(props){
   let [nan, setNan] = useState(true);
   let [tabNumber, setTabNumber] = useState(0);//0: 상세정보, 1: 리뷰, 2:QnA, 3: 반품/교환
   let {id} = useParams();
+  let [fade2, setFade] = useState('');//fade로 애니메이션 end 넣을거임
+  useEffect(()=>{
+    let a = setTimeout(()=>{
+      setFade('end');
+    },100)
+    return ()=>{
+      clearTimeout(a);
+			setFade('');
+		}
+  },[id])
   let nextId = parseInt(id,10) +1;
   const pid = props.pics.findIndex(pic=>pic.id==id);
   const [inputValue, setInputValue] = useState('');
@@ -32,7 +45,7 @@ function Detail(props){
   };
   if(id <= 6 && id>=0){
     return(
-      <div className="container">
+      <div className={"container start " + fade2 }>
         {
           sale == true ?
           <div className="alert alert-warning">
@@ -82,33 +95,46 @@ function Detail(props){
 }
 
 function Tab(props){
-  if(props.tabNumber == 0 ){
-    return(
-      <>
-        {props.pics[0].title}
-      </>
-    );
-  }
-  else if(props.tabNumber == 1 ){
-    return(
-      <>
-        {props.tabNumber}
-      </>
-    );
-  }
-  else if(props.tabNumber == 2 ){
-    return(
-      <>
-        {props.tabNumber}
-      </>
-    );
-  }
-  else if(props.tabNumber == 3 ){
-    return(
-      <>
-        {props.tabNumber}
-      </>
-    );
-  }
+  let [fade, setFade] = useState('');//fade로 애니메이션 end 넣을거임
+  useEffect(()=>{
+    let a = setTimeout(()=>{
+      setFade('end');
+    },100)
+    return ()=>{
+      clearTimeout(a);
+			setFade('');
+		}
+  },[props.tabNumber])
+  return( <div className={'start ' + fade}>
+      {[<div>내용0</div>,<div>{props.tabNumber}</div>,<div>{props.tabNumber}</div>,<div>{props.tabNumber}</div>][props.tabNumber]}
+    </div>)
+  // if(props.tabNumber == 0 ){
+  //   return(
+  //     <>
+  //       {props.pics[0].title}
+  //     </>
+  //   );
+  // }
+  // else if(props.tabNumber == 1 ){
+  //   return(
+  //     <>
+  //       {props.tabNumber}
+  //     </>
+  //   );
+  // }
+  // else if(props.tabNumber == 2 ){
+  //   return(
+  //     <>
+  //       {props.tabNumber}
+  //     </>
+  //   );
+  // }
+  // else if(props.tabNumber == 3 ){
+  //   return(
+  //     <>
+  //       {props.tabNumber}
+  //     </>
+  //   );
+  // }
 }
 export default Detail;
