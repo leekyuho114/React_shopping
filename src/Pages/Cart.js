@@ -9,10 +9,7 @@ function Cart(){// 표 형식으로 장바구니 만들거임
     let dispatch = useDispatch();
     return(
         <>
-          <h6>{state.user.name} {state.user.age} 의 장바구니</h6>
-          <button onClick ={()=>{
-            dispatch(plusAge(10));
-          }}>버튼</button>
+          <h4 style={{marginBottom:'30px', marginTop:'30px',marginLeft:'30px', textAlign: 'left'}}>{state.user.name} 님의 Order/Paymet</h4>
             <Table>
               <thead>
                 <tr>

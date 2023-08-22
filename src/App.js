@@ -37,7 +37,6 @@ function App() {
           <Navbar.Brand onClick={()=>{navigate('/')}} className = "shop-logo" style={{ cursor: 'pointer' }}>신발팜</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link onClick={()=>{navigate('/')}}>Home</Nav.Link>
-            <Nav.Link onClick={()=>{navigate('/detail')}}>Detail</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/about')}}>About us</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/event')}}>Event</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/cart')}}>Cart</Nav.Link>
