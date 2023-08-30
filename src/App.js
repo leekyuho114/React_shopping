@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createContext } from 'react';
 import { Button, Container,Nav, Navbar , Form, InputGroup} from 'react-bootstrap';
 import data from './data.js'; //나중엔 database에서 가져오기
@@ -9,15 +9,12 @@ import Detail from './Pages/Detail.js'
 import Cart from './Pages/Cart.js'
 
 import axios from 'axios';
+import { useQuery } from 'react-query';
 export let Context1 = createContext();
 function App() {
-  let [pics, setPics] = useState(data);
-  const [inputValue, setInputValue] = useState('');
-  let [moreview, setMoreview] = useState(2); // 더보기를 위한 state 
-  let [loading, setLoading] = useState(false); //로딩중입니다 띄우기위한 state
-  let [shoeLeft, setShoeLeft] = useState(10,11,12);// 재고 정보
+  let [pics, setPics] = useState(data); // 신발 state
 
-
+  const [inputValue, setInputValue] = useState(''); // search 기능 state (미구현)
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -27,27 +24,48 @@ function App() {
       setInputValue('');
     }
   };
-  let navigate = useNavigate();
 
+  let [moreview, setMoreview] = useState(2); // 더보기를 위한 state 
+  let [loading, setLoading] = useState(false); //로딩중입니다 띄우기위한 state
+  let [shoeLeft, setShoeLeft] = useState(10,11,12);// 재고 정보
+  let navigate = useNavigate();
+  
+  let watched = new Set();
+  useEffect(()=>{
+    if(localStorage.getItem('watched') === null){
+      localStorage.setItem('watched', JSON.stringify([]));
+    }
+  },[])
+
+  let result = useQuery('query', ()=>{
+    return axios.get('https://codingapple1.github.io/userdata.json').then((a)=>{
+      console.log('요청됨');
+       return a.data;
+    }),
+    { staleTime : 2000}
+  })
+
+ 
   return (
     <div className="App">
-
       <Navbar className = "color-nav" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand onClick={()=>{navigate('/')}} className = "shop-logo" style={{ cursor: 'pointer' }}>신발팜</Navbar.Brand>
+          <Navbar.Brand onClick={()=>{navigate('/')}} className = "shop-logo" style={{ cursor: 'pointer' }}>Shoes</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link onClick={()=>{navigate('/')}}>Home</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/about')}}>About us</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/event')}}>Event</Nav.Link>
             <Nav.Link onClick={()=>{navigate('/cart')}}>Cart</Nav.Link>
           </Nav>
+          <Nav className='ms-auto'>반가워요 kim</Nav>
         </Container>
       </Navbar>
-      {/* <div className = "main-bg" style={{backgroundImage : 'url('+bg+')'}}></div> */}
+      {JSON.parse(localStorage.getItem('watched'))}
       
       <Routes>
         <Route path="/" element={
           <>
+            {watched}
             <div className = "main-bg"></div>
             <div className="container">
               <div className ="row">
@@ -55,7 +73,7 @@ function App() {
                   pics.map(function(a,i){
                     return(
                       <>
-                      <Pictures pics = {pics} num={i} navigate = {navigate}/>
+                      <Pictures pics = {pics} num={i} navigate = {navigate} watched ={watched}/>
                       </>
                     )
                   })
@@ -124,11 +142,29 @@ function App() {
 }
 
 function Pictures(props){
-  if(props.num>=0 && props.num<=6){
+
+  const addWatched = () => { //localStorage에 watched 추가하는 함수
+    let temp = JSON.parse(localStorage.getItem('watched')); //storage에서가져오고
+    props.watched.add(props.num);//새로들어온거 넣고
+    temp.forEach(element => {
+      props.watched.add(element);
+    }); //기존 storage에 있던거 넣고
+    console.log(temp);
+    localStorage.setItem('watched', JSON.stringify(Array.from(props.watched))); // 다시 array로 바꿔서 storage에 넣기
+  };
+
+  if(props.num>=0 && props.num<=6){ //서버에 여섯개가 최대임
     return(
       <div className="col-md-4">
-        {/* <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/> */}
-        <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={'http://codingapple1.github.io/shop/shoes'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
+        <img  
+          onClick={()=>{
+            addWatched();
+            props.navigate('/detail/'+(props.num))
+          }} 
+          src={'http://codingapple1.github.io/shop/shoes'+ (props.num+1) +'.jpg'} 
+          className = 'main-pics'
+          style={{cursor:'pointer'}}
+        />
         <h4>{props.pics[props.num].title}</h4>
         <p>{props.pics[props.num].content}</p>
         <p>{props.pics[props.num].price}원</p>
