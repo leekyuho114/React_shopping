@@ -2,11 +2,15 @@ import { Table} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeName , plusAge} from '../store/userSlice.js';
 import { increaseCount } from '../store';
+import { useState } from 'react';
+import { memo } from 'react';
+import { useMemo } from 'react';
 
 function Cart(){// 표 형식으로 장바구니 만들거임
     let state = useSelector((state)=>{return state})
     let data = useSelector((state)=>{return state.cartData});
     let dispatch = useDispatch();
+
     return(
         <>
           <h4 style={{marginBottom:'30px', marginTop:'30px',marginLeft:'30px', textAlign: 'left'}}>{state.user.name} 님의 Order/Paymet</h4>

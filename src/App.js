@@ -1,15 +1,19 @@
 import logo from './logo.svg';
 import './App.css';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { createContext } from 'react';
 import { Button, Container,Nav, Navbar , Form, InputGroup} from 'react-bootstrap';
 import data from './data.js'; //나중엔 database에서 가져오기
 import {Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom'
-import Detail from './Pages/Detail.js'
-import Cart from './Pages/Cart.js'
-
+// import Detail from './Pages/Detail.js'
+// import Cart from './Pages/Cart.js'
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import { useTransition } from 'react';
+const Detail = lazy(()=> import('./Pages/Detail.js'));
+const Cart = lazy(()=> import('./Pages/Cart.js'));
+
+let a= new Array(10000).fill(0)
 export let Context1 = createContext();
 function App() {
   let [pics, setPics] = useState(data); // 신발 state
@@ -37,13 +41,15 @@ function App() {
     }
   },[])
 
-  let result = useQuery('query', ()=>{
-    return axios.get('https://codingapple1.github.io/userdata.json').then((a)=>{
-      console.log('요청됨');
-       return a.data;
-    }),
-    { staleTime : 2000}
-  })
+  let [name, setName] = useState('');
+  let [isPending,startTransition] = useTransition();
+  // let result = useQuery('query', ()=>{
+  //   return axios.get('https://codingapple1.github.io/userdata.json').then((a)=>{
+  //     console.log('요청됨');
+  //      return a.data;
+  //   }),
+  //   { staleTime : 2000}
+  // })
 
  
   return (
@@ -60,83 +66,94 @@ function App() {
           <Nav className='ms-auto'>반가워요 kim</Nav>
         </Container>
       </Navbar>
-      {JSON.parse(localStorage.getItem('watched'))}
-      
-      <Routes>
-        <Route path="/" element={
-          <>
-            {watched}
-            <div className = "main-bg"></div>
-            <div className="container">
-              <div className ="row">
-                {
-                  pics.map(function(a,i){
-                    return(
-                      <>
-                      <Pictures pics = {pics} num={i} navigate = {navigate} watched ={watched}/>
-                      </>
-                    )
-                  })
-                }
+      {/* {JSON.parse(localStorage.getItem('watched'))} */}
+      <input onChange={(e)=>{
+        startTransition(()=>{
+          setName(e.target.value)
+        })
+      }}></input>
+      {
+        a.map(()=>{
+          return <div>{name}</div>
+        })
+      }
+      <Suspense fallback={<div>로딩중입니다</div>}>
+        <Routes>
+          <Route path="/" element={
+            <>
+              {watched}
+              <div className = "main-bg"></div>
+              <div className="container">
+                <div className ="row">
+                  {
+                    pics.map(function(a,i){
+                      return(
+                        <>
+                        <Pictures pics = {pics} num={i} navigate = {navigate} watched ={watched}/>
+                        </>
+                      )
+                    })
+                  }
+                </div>
               </div>
-            </div>
-            {
-              loading == true ? <div style={{marginTop : '50px', fontWeight:'bolder'}}>로딩중입니다</div> : null
-            }
-            <button onClick={()=>{
-              if(moreview<=3){
-                setLoading(true);
-                axios.get('https://codingapple1.github.io/shop/data'+(moreview) + '.json')
-                .then((res)=>{
-                  console.log(res);
-                  const newItems = res.data;
-                  setPics([...pics,...newItems]);//array에 추가
-                })
-                .catch(()=>{
-                  console.log('fail to get data');
-                })
-                setLoading(false);
-                setMoreview(moreview+1);
+              {
+                loading == true ? <div style={{marginTop : '50px', fontWeight:'bolder'}}>로딩중입니다</div> : null
               }
-              else{
-                alert('더 이상 상품이 존재하지 않습니다.');
-              }
-            }}
-              style={{marginTop:'30px'}}
-              className='more-button'
-            >more</button>
-            <div style={{ marginTop:'30px', display: 'flex', justifyContent: 'center' }}>
-              <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
-                <InputGroup.Text id="inputGroup-sizing-default">
-                  Search
-                </InputGroup.Text>
-                <Form.Control
-                  aria-label="Default"
-                  aria-describedby="inputGroup-sizing-default"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                />
-              </InputGroup>
-            </div>
-          </>
-        }/>
-        <Route path="/detail/:id" element={
-        <div>
-          <Context1.Provider value={{shoeLeft, pics}}>
-            <Detail pics = {pics} num={1} />
-          </Context1.Provider>
-        </div>}/>
+              <button onClick={()=>{
+                if(moreview<=3){
+                  setLoading(true);
+                  axios.get('https://codingapple1.github.io/shop/data'+(moreview) + '.json')
+                  .then((res)=>{
+                    console.log(res);
+                    const newItems = res.data;
+                    setPics([...pics,...newItems]);//array에 추가
+                  })
+                  .catch(()=>{
+                    console.log('fail to get data');
+                  })
+                  setLoading(false);
+                  setMoreview(moreview+1);
+                }
+                else{
+                  alert('더 이상 상품이 존재하지 않습니다.');
+                }
+              }}
+                style={{marginTop:'30px'}}
+                className='more-button'
+              >more</button>
+              <div style={{ marginTop:'30px', display: 'flex', justifyContent: 'center' }}>
+                <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
+                  <InputGroup.Text id="inputGroup-sizing-default">
+                    Search
+                  </InputGroup.Text>
+                  <Form.Control
+                    aria-label="Default"
+                    aria-describedby="inputGroup-sizing-default"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                  />
+                </InputGroup>
+              </div>
+            </>
+          }/>
+          <Route path="/detail/:id" element={
+          <div>
+            <Context1.Provider value={{shoeLeft, pics}}>
+              <Detail pics = {pics} num={1}/>
+            </Context1.Provider>
+          </div>}/>
 
-        <Route path="/cart" element={<div><Cart/></div>}/>
+          <Route path="/cart" element={<div><Cart/></div>}/>
 
-        <Route path="/about" element={<div><AboutUs/></div>}/>
-        <Route path="/event" element={<div><Event/></div>}>
-          <Route path="one" element={<div>첫 주문시 할인쿠폰 서비스</div>}/>
-          <Route path="two" element={<div>생일기념 쿠폰받기</div>}/>
-        </Route>
-        <Route path="*" element={<div>404</div>}/>
-      </Routes>
+          <Route path="/about" element={<div><AboutUs/></div>}/>
+          <Route path="/event" element={<div><Event/></div>}>
+            <Route path="one" element={<div>첫 주문시 할인쿠폰 서비스</div>}/>
+            <Route path="two" element={<div>생일기념 쿠폰받기</div>}/>
+          </Route>
+          <Route path="*" element={<div>404</div>}/>
+        </Routes>
+      </Suspense>
     </div>
   );
 }
@@ -172,14 +189,7 @@ function Pictures(props){
     );
   }
   else{
-    // return(
-    //   <div className="col-md-4">
-    //     <img  onClick={()=>{props.navigate('/detail/'+(props.num))}} src={process.env.PUBLIC_URL + '/img/row'+ (props.num+1) +'.jpg'} className = 'main-pics'/>
-    //     <h4>{props.pics[props.num].title}</h4>
-    //     <p>{props.pics[props.num].content}</p>
-    //     <p>{props.pics[props.num].price}원</p>
-    //   </div>
-    // );
+
   }
 }
 

@@ -80,19 +80,18 @@ function Detail(props){
             <p>{props.pics[pid].content}</p>
             <p>{props.pics[pid].price}</p>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
-                  <InputGroup.Text id="inputGroup-sizing-default">
-                    수량
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    // onKeyDown={handleKeyDown}
-                  />
-                </InputGroup>
-              </div>
+              <InputGroup className="mb-3" style={{ maxWidth: '70%' }}>
+                <InputGroup.Text id="inputGroup-sizing-default">
+                  수량
+                </InputGroup.Text>
+                <Form.Control
+                  aria-label="Default"
+                  aria-describedby="inputGroup-sizing-default"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                />
+              </InputGroup>
+            </div>
             <button 
               className="btn btn-danger"
               onClick={handleKeyDown}  
